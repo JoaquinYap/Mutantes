@@ -12,7 +12,7 @@ public class MutantDetectorApplication {
 		System.out.println("----------------------------------------------------------");
 		System.out.println(" Servidor iniciado correctamente");
 		System.out.println(" Documentación Swagger: http://localhost:8080/swagger-ui.html");
-		System.out.println(" Base de datos H2:      http://localhost:8080/h2-parcial");
+		System.out.println(" Base de datos H2:      http://localhost:8080/h2-console");
 		System.out.println("----------------------------------------------------------");
 	}
 

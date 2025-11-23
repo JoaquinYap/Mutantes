@@ -8,47 +8,74 @@ public class MutantDetector {
     private static final int SEQUENCE_LENGTH = 4;
 
     public boolean isMutant(String[] dna) {
-        int n = dna.length;
-        char[][] matrix = new char[n][n];
+        // 1. VALIDACIÓN ANTI-NULL (Esto arregla el NullPointerException)
+        if (dna == null) return false;
 
-        // Convertir a char[][]
+        int n = dna.length;
+        if (n == 0) return false;
+
+        // Validación básica de tamaño
+        if (n < SEQUENCE_LENGTH) return false;
+
+        char[][] matrix = new char[n][];
+
+        // Convertir a char[][] para acceso rápido
         for (int i = 0; i < n; i++) {
             matrix[i] = dna[i].toCharArray();
         }
 
         int sequencesFound = 0;
 
-        // Búsqueda optimizada
+        // Recorrido optimizado
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                if (sequencesFound > 1) return true; // Early termination
 
-                // Horizontal
-                if (j + SEQUENCE_LENGTH <= n && check(matrix[i][j], matrix[i][j+1], matrix[i][j+2], matrix[i][j+3])) {
-                    sequencesFound++;
-                    continue;
+                // Early Termination
+                if (sequencesFound > 1) return true;
+
+                char base = matrix[i][j];
+
+                // 1. Horizontal
+                if (j <= n - SEQUENCE_LENGTH) {
+                    if (base == matrix[i][j+1] &&
+                            base == matrix[i][j+2] &&
+                            base == matrix[i][j+3]) {
+                        sequencesFound++;
+                        if (sequencesFound > 1) return true;
+                    }
                 }
-                // Vertical
-                if (i + SEQUENCE_LENGTH <= n && check(matrix[i][j], matrix[i+1][j], matrix[i+2][j], matrix[i+3][j])) {
-                    sequencesFound++;
-                    continue;
+
+                // 2. Vertical
+                if (i <= n - SEQUENCE_LENGTH) {
+                    if (base == matrix[i+1][j] &&
+                            base == matrix[i+2][j] &&
+                            base == matrix[i+3][j]) {
+                        sequencesFound++;
+                        if (sequencesFound > 1) return true;
+                    }
                 }
-                // Diagonal
-                if (i + SEQUENCE_LENGTH <= n && j + SEQUENCE_LENGTH <= n && check(matrix[i][j], matrix[i+1][j+1], matrix[i+2][j+2], matrix[i+3][j+3])) {
-                    sequencesFound++;
-                    continue;
+
+                // 3. Diagonal Principal
+                if (i <= n - SEQUENCE_LENGTH && j <= n - SEQUENCE_LENGTH) {
+                    if (base == matrix[i+1][j+1] &&
+                            base == matrix[i+2][j+2] &&
+                            base == matrix[i+3][j+3]) {
+                        sequencesFound++;
+                        if (sequencesFound > 1) return true;
+                    }
                 }
-                // Diagonal Inversa
-                if (i + SEQUENCE_LENGTH <= n && j - SEQUENCE_LENGTH + 1 >= 0 && check(matrix[i][j], matrix[i+1][j-1], matrix[i+2][j-2], matrix[i+3][j-3])) {
-                    sequencesFound++;
-                    continue;
+
+                // 4. Diagonal Inversa
+                if (i <= n - SEQUENCE_LENGTH && j >= SEQUENCE_LENGTH - 1) {
+                    if (base == matrix[i+1][j-1] &&
+                            base == matrix[i+2][j-2] &&
+                            base == matrix[i+3][j-3]) {
+                        sequencesFound++;
+                        if (sequencesFound > 1) return true;
+                    }
                 }
             }
         }
-        return sequencesFound > 1;
-    }
-
-    private boolean check(char c1, char c2, char c3, char c4) {
-        return c1 == c2 && c2 == c3 && c3 == c4;
+        return false;
     }
 }

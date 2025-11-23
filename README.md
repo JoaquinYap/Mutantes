@@ -110,7 +110,7 @@ La API cuenta con documentación interactiva generada con **Swagger UI**. Puedes
     }
     
  * **Ejemplo MUTANTE VERTICAL:**
-       ```json
+   ```json
     { 
    "secuencia": [
        "ATGCGA",
@@ -121,9 +121,9 @@ La API cuenta con documentación interactiva generada con **Swagger UI**. Puedes
        "ATCACT"
    ]
    }
-       ```json
+   
 * **Ejemplo HUMANO:**
-         ```json
+  ```json
     {
     "secuencia": [
         "ATGCGA",
@@ -134,7 +134,6 @@ La API cuenta con documentación interactiva generada con **Swagger UI**. Puedes
         "TCACTG"
     ]
     }
-       ```json
 
     ```
 * **Respuestas:**

@@ -1,6 +1,6 @@
-# 🧬 Mutant Detector API
+# GLOBAL DESARROLLO DE SOFTWARE
 
-> GLOBAL DESARROLLO DE SOFTWARE
+> Mutan Detector API
 > Examen Mercadolibre - Backend Developer
 
 API REST desarrollada en Java con Spring Boot para detectar si un humano es mutante basándose en su secuencia de ADN. El proyecto sigue una arquitectura en capas, cuenta con optimizaciones de rendimiento, persistencia de datos y alta cobertura de pruebas.

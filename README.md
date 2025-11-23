@@ -118,7 +118,7 @@ La API cuenta con documentación interactiva generada con **Swagger UI**. Puedes
 Puedes inspeccionar los registros guardados en la base de datos en memoria.
 
 * **URL:** [http://localhost:8080/h2-console](http://localhost:8080/h2-console)
-* **JDBC URL:** `jdbc:h2:mem:mutantesdb`
+* **JDBC URL:** `jdbc:h2:mem:testdb`
 * **User Name:** `sa`
 * **Password:** (dejar vacío)
 

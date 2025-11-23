@@ -85,7 +85,7 @@ La API cuenta con documentación interactiva generada con **Swagger UI**. Puedes
     ```json
     
     {
-      "dna": [
+      "secuencia": [
         "ATGCGA",
         "CAGTGC",
         "TTATGT",

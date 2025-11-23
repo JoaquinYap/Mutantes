@@ -85,7 +85,7 @@ La API cuenta con documentación interactiva generada con **Swagger UI**. Puedes
     ```json
     
     {
-      "secuencia": [
+      "dna": [
         "ATGCGA",
         "CAGTGC",
         "TTATGT",
@@ -99,7 +99,7 @@ La API cuenta con documentación interactiva generada con **Swagger UI**. Puedes
     ```json
 
     {
-    "secuencia": [
+    "dna": [
         "AAAAAA",
         "CAGTGC",
         "TTATGT",
@@ -112,7 +112,7 @@ La API cuenta con documentación interactiva generada con **Swagger UI**. Puedes
  * **Ejemplo MUTANTE VERTICAL:**
    ```json
     { 
-   "secuencia": [
+   "dna": [
        "ATGCGA",
        "AAGTGC",
        "ATATGT",
@@ -125,7 +125,7 @@ La API cuenta con documentación interactiva generada con **Swagger UI**. Puedes
 * **Ejemplo HUMANO:**
   ```json
     {
-    "secuencia": [
+    "dna": [
         "ATGCGA",
         "CAGTGC",
         "TTATTT",

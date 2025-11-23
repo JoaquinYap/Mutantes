@@ -51,7 +51,7 @@ API REST desarrollada en Java con Spring Boot para detectar si un humano es muta
 
 1.  **Clonar el repositorio:**
     ```bash
-    git clone [https://github.com/TU_USUARIO/nombre-repo.git](https://github.com/TU_USUARIO/nombre-repo.git)
+    git clone [https://github.com/JoaquinYap/Mutantes.git](https://github.com/JoaquinYap/Mutantes.git)
     cd nombre-repo
     ```
 

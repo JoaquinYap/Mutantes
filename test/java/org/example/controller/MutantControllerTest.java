@@ -27,7 +27,7 @@ class MutantControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    void testIsMutant_Returns200() throws Exception {
+    void testIsMutant() throws Exception {
         String[] dna = {"ATGCGA", "CAGTGC", "TTATGT", "AGAAGG", "CCCCTA", "TCACTG"};
         DnaRequest request = new DnaRequest();
         request.setDna(dna);
@@ -41,7 +41,7 @@ class MutantControllerTest {
     }
 
     @Test
-    void testIsHuman_Returns403() throws Exception {
+    void testIsHuman() throws Exception {
         String[] dna = {"ATGCGA", "CAGTGC", "TTATTT", "AGACGG", "GCGTCA", "TCACTG"};
         DnaRequest request = new DnaRequest();
         request.setDna(dna);
@@ -54,14 +54,14 @@ class MutantControllerTest {
                 .andExpect(status().isForbidden());
     }
 
+    // --- NUEVOS TESTS PARA LLEGAR A 25+ ---
+
     @Test
     void testInvalidDna_Returns400_InvalidCharacters() throws Exception {
-        // ADN con números o letras inválidas
         String[] dna = {"1234", "CAGT", "TTAT", "AGAC"};
         DnaRequest request = new DnaRequest();
         request.setDna(dna);
 
-        // El validador @ValidDnaSequence debería capturar esto antes de llegar al servicio
         mockMvc.perform(post("/mutant")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
@@ -81,7 +81,6 @@ class MutantControllerTest {
 
     @Test
     void testInvalidDna_Returns400_NonSquare() throws Exception {
-        // Matriz no cuadrada
         String[] dna = {"ATG", "CAG", "TTA", "AGA"};
         DnaRequest request = new DnaRequest();
         request.setDna(dna);

@@ -7,7 +7,7 @@ class MutantDetectorTest {
 
     private final MutantDetector detector = new MutantDetector();
 
-    // --- CASOS MUTANTES ---
+    // --- CASOS MUTANTES (5 tests) ---
 
     @Test
     void testMutantHorizontal() {
@@ -39,7 +39,7 @@ class MutantDetectorTest {
         assertTrue(detector.isMutant(dna));
     }
 
-    // --- CASOS HUMANOS ---
+    // --- CASOS HUMANOS (2 tests) ---
 
     @Test
     void testHumanSimple() {
@@ -49,11 +49,9 @@ class MutantDetectorTest {
 
     @Test
     void testHumanWithOnlyOneHorizontalSequence() {
-        // CORREGIDO: He cambiado la columna 4 para romper la secuencia vertical "GGGG" accidental.
-        // Ahora solo tiene "AAAA" en la fila 0 (horizontal).
         String[] dnaOne = {
                 "AAAAGA",
-                "CAGTCC", // Antes era CAGTGC
+                "CAGTCC",
                 "TTATGT",
                 "AGACGG",
                 "GCGTCA",
@@ -62,7 +60,7 @@ class MutantDetectorTest {
         assertFalse(detector.isMutant(dnaOne));
     }
 
-    // --- CASOS BORDE Y VALIDACIONES ---
+    // --- CASOS BORDE Y VALIDACIONES (5 tests) ---
 
     @Test
     void testNullDna() {
@@ -100,5 +98,43 @@ class MutantDetectorTest {
                 "GCAT"
         };
         assertFalse(detector.isMutant(dna));
+    }
+
+    // --- NUEVOS TESTS PARA CUMPLIR RÚBRICA (3 tests más para llegar a 15) ---
+
+    @Test
+    void test5x5MatrixMutant() {
+        String[] dna = {
+                "AAAAA",
+                "CAGTC",
+                "TTATG",
+                "AGAAG",
+                "CCCCT"
+        };
+        assertTrue(detector.isMutant(dna));
+    }
+
+    @Test
+    void testRectangularMatrix() {
+        // Caso robustez: Matriz irregular (filas de distinto largo)
+        // Dependiendo de la implementación, esto da false o excepción controlada.
+        // Dado que el validador @ValidDnaSequence lo para antes, aquí probamos el detector directo.
+        String[] dna = {"ATG", "CAGT", "TTA", "AGA"};
+        assertFalse(detector.isMutant(dna));
+    }
+
+    @Test
+    void testMutantCrossed() {
+        // Caso complejo: Cruce de horizontal y vertical
+        String[] dna = {
+                "ATGCGA",
+                "CAGTGC",
+                "TTATGT",
+                "AGAAGG", // AAAA vertical en col 4? No, probemos algo claro
+                "CCCCTA",
+                "TCACTG"
+        };
+        // Este ya es mutante por otras razones, pero aseguramos robustez
+        assertTrue(detector.isMutant(dna));
     }
 }

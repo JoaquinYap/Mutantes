@@ -83,6 +83,7 @@ La API cuenta con documentación interactiva generada con **Swagger UI**. Puedes
 * **Descripción:** Envía una secuencia de ADN para ser analizada.
 * **Body (JSON):**
     ```json
+    
     {
       "dna": [
         "ATGCGA",
@@ -93,6 +94,27 @@ La API cuenta con documentación interactiva generada con **Swagger UI**. Puedes
         "TCACTG"
       ]
     }
+    {
+    "secuencia": [
+        "AAAAAA",
+        "CAGTGC",
+        "TTATGT",
+        "AGAAGG",
+        "CCCCTA",
+        "TCACTG"
+    ]
+    }
+    {
+   "secuencia": [
+       "ATGCGA",
+       "AAGTGC",
+       "ATATGT",
+       "AGAAGG",
+       "ACCCCT",
+       "ATCACT"
+   ]
+   }
+
     ```
 * **Respuestas:**
     * `200 OK`: Es un **Mutante**.

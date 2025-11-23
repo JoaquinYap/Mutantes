@@ -81,7 +81,7 @@ La API cuenta con documentación interactiva generada con **Swagger UI**. Puedes
 #### 1. Detectar Mutante
 * **URL:** `POST /mutant`
 * **Descripción:** Envía una secuencia de ADN para ser analizada.
-* **Body (JSON):**
+* **Ejemplo MUTANTE:**
     ```json
     
     {
@@ -94,6 +94,10 @@ La API cuenta con documentación interactiva generada con **Swagger UI**. Puedes
         "TCACTG"
       ]
     }
+    
+ * **Ejemplo MUTANTE HORIZONTAL:**
+    ```json
+
     {
     "secuencia": [
         "AAAAAA",
@@ -104,7 +108,10 @@ La API cuenta con documentación interactiva generada con **Swagger UI**. Puedes
         "TCACTG"
     ]
     }
-    {
+    
+ * **Ejemplo MUTANTE VERTICAL:**
+       ```json
+    { 
    "secuencia": [
        "ATGCGA",
        "AAGTGC",
@@ -114,6 +121,20 @@ La API cuenta con documentación interactiva generada con **Swagger UI**. Puedes
        "ATCACT"
    ]
    }
+       ```json
+* **Ejemplo HUMANO:**
+         ```json
+    {
+    "secuencia": [
+        "ATGCGA",
+        "CAGTGC",
+        "TTATTT",
+        "AGACGG",
+        "CCTCTA",
+        "TCACTG"
+    ]
+    }
+       ```json
 
     ```
 * **Respuestas:**

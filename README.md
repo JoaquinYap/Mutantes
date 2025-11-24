@@ -141,5 +141,9 @@ La API cuenta con documentación interactiva generada con **Swagger UI**.
         "ratio": 0.4
     }
     ```
+## 📊 Diagrama de Secuencia
+
+Se ha diseñado un diagrama de secuencia para documentar el flujo lógico de la detección de mutantes, desde la petición HTTP hasta la persistencia en base de datos.
+📄 **[Ver Diagrama de Secuencia](diagrama_secuencia.pdf)**
 
 ---

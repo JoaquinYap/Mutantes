@@ -17,11 +17,10 @@ API REST desarrollada en Java con Spring Boot para detectar si un humano es muta
 
 La API se encuentra desplegada y accesible públicamente en **Render**.
 
-👉 **URL Base:** [PON_AQUI_TU_URL_DE_RENDER]  
-*(Ejemplo: https://mutantes-api-joaquin.onrender.com)*
+👉 **URL Base:** [https://mutantes-21r4.onrender.com](https://mutantes-21r4.onrender.com)
 
-- **Swagger UI (Documentación):** [PON_AQUI_TU_URL_DE_RENDER]/swagger-ui.html
-- **Health Check:** [PON_AQUI_TU_URL_DE_RENDER]/actuator/health
+- **Swagger UI (Documentación):** [https://mutantes-21r4.onrender.com/swagger-ui.html](https://mutantes-21r4.onrender.com/swagger-ui.html)
+- **Health Check:** [https://mutantes-21r4.onrender.com/health](https://mutantes-21r4.onrender.com/health)
 
 ---
 
@@ -106,7 +105,7 @@ La aplicación estará disponible en `http://localhost:8080`.
 La API cuenta con documentación interactiva generada con **Swagger UI**.
 
 👉 **Local:** [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)  
-👉 **Nube:** [PON_AQUI_TU_URL_DE_RENDER]/swagger-ui.html
+👉 **Nube:** [https://mutantes-21r4.onrender.com/swagger-ui.html](https://mutantes-21r4.onrender.com/swagger-ui.html)
 
 ### Endpoints Principales
 
@@ -144,24 +143,3 @@ La API cuenta con documentación interactiva generada con **Swagger UI**.
     ```
 
 ---
-
-## 💾 Base de Datos (H2 Console)
-
-Puedes inspeccionar los registros guardados en la base de datos en memoria (solo en ejecución local).
-
-* **URL:** [http://localhost:8080/h2-console](http://localhost:8080/h2-console)
-* **JDBC URL:** `jdbc:h2:mem:testdb`
-* **User Name:** `sa`
-* **Password:** *(dejar vacío)*
-
-> **Nota:** La tabla principal es `dna_records`. El campo `dna_hash` almacena el identificador único SHA-256 (índice único).
-
----
-
-## 🧪 Testing y Cobertura
-
-El proyecto incluye una suite completa de tests unitarios y de integración. Se ha configurado una regla de calidad estricta que requiere **mínimo 80% de cobertura** para aprobar el build.
-
-### Ejecutar Tests
-```bash
-./gradlew test

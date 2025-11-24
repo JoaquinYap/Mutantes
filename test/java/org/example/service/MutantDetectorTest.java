@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class MutantDetectorTest {
 
     private final MutantDetector detector = new MutantDetector();
-
+    
     @Test
     void testMutantHorizontal() {
         String[] dna = {"AAAAAA", "CAGTGC", "TTATGT", "AGAAGG", "CCCCTA", "TCACTG"};
@@ -94,6 +94,7 @@ class MutantDetectorTest {
         assertFalse(detector.isMutant(dna));
     }
 
+
     @Test
     void test5x5MatrixMutant() {
         String[] dna = {
@@ -144,7 +145,7 @@ class MutantDetectorTest {
 
     @Test
     void testLargeMatrixPerformance() {
-        int n = 100;
+        int n = 1000; // Matriz grande 1000x1000
         String[] dna = new String[n];
         StringBuilder row = new StringBuilder();
         for(int i=0; i<n; i++) row.append('A');
@@ -152,12 +153,17 @@ class MutantDetectorTest {
         for (int i = 0; i < n; i++) {
             dna[i] = row.toString();
         }
-        assertTrue(detector.isMutant(dna));
+
+        long startTime = System.currentTimeMillis();
+        boolean isMutant = detector.isMutant(dna);
+        long endTime = System.currentTimeMillis();
+
+        assertTrue(isMutant);
+        assertTrue((endTime - startTime) < 500, "El algoritmo es demasiado lento para matrices grandes");
     }
 
     @Test
     void testInvalidCharactersInsideDetector() {
-
         String[] dna = {"ATGCGA", "CAGTXC", "TTATGT", "AGAAGG", "CCCCTA", "TCACTG"};
         assertFalse(detector.isMutant(dna));
     }

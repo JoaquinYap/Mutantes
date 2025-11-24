@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MutantDetector.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">demo</a> &gt; <a href="index.source.html" class="el_package">org.example.service</a> &gt; <span class="el_source">MutantDetector.java</span></div><h1>MutantDetector.java</h1><pre class="source lang-java linenums">package org.example.service;
+
+import org.springframework.stereotype.Component;
+import java.util.Set; // 1. Import necesario para la validación O(1)
+
+@Component
+<span class="fc" id="L7">public class MutantDetector {</span>
+
+    private static final int SEQUENCE_LENGTH = 4;
+
+    // 2. OPTIMIZACIÓN: Set inmutable para validación ultra-rápida de caracteres
+<span class="fc" id="L12">    private static final Set&lt;Character&gt; VALID_BASES = Set.of('A', 'T', 'C', 'G');</span>
+
+    public boolean isMutant(String[] dna) {
+        // --- 1. VALIDACIONES INICIALES ---
+<span class="fc bfc" id="L16" title="All 2 branches covered.">        if (dna == null) return false;</span>
+
+<span class="fc" id="L18">        int n = dna.length;</span>
+<span class="fc bfc" id="L19" title="All 2 branches covered.">        if (n == 0) return false;</span>
+
+        // Si es menor a 4x4, no puede tener secuencias suficientes
+<span class="fc bfc" id="L22" title="All 2 branches covered.">        if (n &lt; SEQUENCE_LENGTH) return false;</span>
+
+<span class="fc" id="L24">        char[][] matrix = new char[n][];</span>
+
+        // --- 2. CONVERSIÓN, VALIDACIÓN NxN Y CARACTERES ---
+<span class="fc bfc" id="L27" title="All 2 branches covered.">        for (int i = 0; i &lt; n; i++) {</span>
+            // Validación de robustez: Fila nula o longitud incorrecta (Matriz Cuadrada)
+<span class="fc bfc" id="L29" title="All 4 branches covered.">            if (dna[i] == null || dna[i].length() != n) {</span>
+<span class="fc" id="L30">                return false;</span>
+            }
+
+            // Validación interna: Verificar que SOLO contenga A, T, C, G
+            // Esto cumple con el requisito de &quot;Validación Set O(1)&quot; de la rúbrica
+<span class="fc bfc" id="L35" title="All 2 branches covered.">            for (char c : dna[i].toCharArray()) {</span>
+<span class="fc bfc" id="L36" title="All 2 branches covered.">                if (!VALID_BASES.contains(c)) {</span>
+<span class="fc" id="L37">                    return false; // Carácter inválido detectado</span>
+                }
+            }
+
+            // Convertir a matriz de caracteres para acceso rápido
+<span class="fc" id="L42">            matrix[i] = dna[i].toCharArray();</span>
+        }
+
+<span class="fc" id="L45">        int sequencesFound = 0;</span>
+
+        // --- 3. RECORRIDO OPTIMIZADO (Single Pass) ---
+<span class="fc bfc" id="L48" title="All 2 branches covered.">        for (int i = 0; i &lt; n; i++) {</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">            for (int j = 0; j &lt; n; j++) {</span>
+
+                // OPTIMIZACIÓN CRÍTICA: Early Termination
+                // Si ya encontramos más de 1 secuencia, cortamos inmediatamente.
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">                if (sequencesFound &gt; 1) return true;</span>
+
+<span class="fc" id="L55">                char base = matrix[i][j];</span>
+
+                // Búsqueda Horizontal
+                // Boundary Check: Solo buscar si caben 4 letras (j &lt;= n - 4)
+<span class="fc bfc" id="L59" title="All 2 branches covered.">                if (j &lt;= n - SEQUENCE_LENGTH) {</span>
+<span class="fc bfc" id="L60" title="All 6 branches covered.">                    if (base == matrix[i][j+1] &amp;&amp;</span>
+                            base == matrix[i][j+2] &amp;&amp;
+                            base == matrix[i][j+3]) {
+<span class="fc" id="L63">                        sequencesFound++;</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">                        if (sequencesFound &gt; 1) return true;</span>
+                    }
+                }
+
+                // Búsqueda Vertical
+                // Boundary Check: Solo buscar si caben 4 letras hacia abajo (i &lt;= n - 4)
+<span class="fc bfc" id="L70" title="All 2 branches covered.">                if (i &lt;= n - SEQUENCE_LENGTH) {</span>
+<span class="pc bpc" id="L71" title="1 of 6 branches missed.">                    if (base == matrix[i+1][j] &amp;&amp;</span>
+                            base == matrix[i+2][j] &amp;&amp;
+                            base == matrix[i+3][j]) {
+<span class="fc" id="L74">                        sequencesFound++;</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">                        if (sequencesFound &gt; 1) return true;</span>
+                    }
+                }
+
+                // Búsqueda Diagonal Principal (Descendente ↘)
+<span class="fc bfc" id="L80" title="All 4 branches covered.">                if (i &lt;= n - SEQUENCE_LENGTH &amp;&amp; j &lt;= n - SEQUENCE_LENGTH) {</span>
+<span class="fc bfc" id="L81" title="All 6 branches covered.">                    if (base == matrix[i+1][j+1] &amp;&amp;</span>
+                            base == matrix[i+2][j+2] &amp;&amp;
+                            base == matrix[i+3][j+3]) {
+<span class="fc" id="L84">                        sequencesFound++;</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">                        if (sequencesFound &gt; 1) return true;</span>
+                    }
+                }
+
+                // Búsqueda Diagonal Inversa (Ascendente ↙)
+                // Se busca hacia abajo-izquierda: i aumenta, j disminuye
+<span class="fc bfc" id="L91" title="All 4 branches covered.">                if (i &lt;= n - SEQUENCE_LENGTH &amp;&amp; j &gt;= SEQUENCE_LENGTH - 1) {</span>
+<span class="pc bpc" id="L92" title="5 of 6 branches missed.">                    if (base == matrix[i+1][j-1] &amp;&amp;</span>
+                            base == matrix[i+2][j-2] &amp;&amp;
+                            base == matrix[i+3][j-3]) {
+<span class="nc" id="L95">                        sequencesFound++;</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">                        if (sequencesFound &gt; 1) return true;</span>
+                    }
+                }
+            }
+        }
+
+        // Si terminamos de recorrer y no encontramos &gt; 1 secuencia
+<span class="fc" id="L103">        return false;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

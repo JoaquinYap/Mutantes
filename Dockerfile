@@ -9,4 +9,6 @@ RUN ./gradlew bootJar --no-daemon
 FROM eclipse-temurin:17-jdk-alpine
 EXPOSE 8080
 COPY --from=build ./build/libs/Mutantes-0.0.1-SNAPSHOT.jar ./app.jar
-ENTRYPOINT ["java", "-jar", "app.jar"] ["java", "-jar", "app.jar"]
+
+# CAMBIO CLAVE: Usamos formato shell (sin corchetes) para evitar errores de parsing
+ENTRYPOINT java -jar app.jar

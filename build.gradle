@@ -43,3 +43,15 @@ jacocoTestReport {
 		html.required = true
 	}
 }
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.80
+			}
+		}
+	}
+}
+// Hacer que el check se ejecute siempre después de los tests
+check.dependsOn jacocoTestCoverageVerification

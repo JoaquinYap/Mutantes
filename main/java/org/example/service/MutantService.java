@@ -35,10 +35,11 @@ public class MutantService {
      */
     public boolean analyze(String[] dna) {
         // 1. Calcular Hash SHA-256 para identificación única
-        String hash = calculateHash(dna);
+        String dnaHash = calculateHash(dna);
 
         // 2. Verificar Cache en BD (Evitar re-procesamiento)
-        Optional<DnaRecord> existing = repository.findByHash(hash);
+        // Se busca por 'dnaHash' en lugar de 'hash'
+        Optional<DnaRecord> existing = repository.findByDnaHash(dnaHash);
         if (existing.isPresent()) {
             return existing.get().isMutant();
         }
@@ -48,7 +49,7 @@ public class MutantService {
 
         // 4. Guardar resultado en la base de datos
         DnaRecord record = DnaRecord.builder()
-                .hash(hash)
+                .dnaHash(dnaHash) // Se usa el nuevo nombre de atributo
                 .sequence(String.join(",", dna))
                 .isMutant(isMutant)
                 .build();

@@ -6,7 +6,7 @@ RUN chmod +x ./gradlew
 RUN ./gradlew bootJar --no-daemon
 
 # ETAPA 2: RUNTIME
-FROM openjdk:17-alpine
+FROM eclipse-temurin:17-jdk-alpine
 EXPOSE 8080
 COPY --from=build ./build/libs/Mutantes-0.0.1-SNAPSHOT.jar ./app.jar
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"] ["java", "-jar", "app.jar"]

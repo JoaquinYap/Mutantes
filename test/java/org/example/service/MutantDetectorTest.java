@@ -100,7 +100,7 @@ class MutantDetectorTest {
         assertFalse(detector.isMutant(dna));
     }
 
-    // --- NUEVOS TESTS PARA CUMPLIR RÚBRICA (3 tests más para llegar a 15) ---
+    // --- NUEVOS TESTS PARA CUMPLIR RÚBRICA ---
 
     @Test
     void test5x5MatrixMutant() {
@@ -116,25 +116,54 @@ class MutantDetectorTest {
 
     @Test
     void testRectangularMatrix() {
-        // Caso robustez: Matriz irregular (filas de distinto largo)
-        // Dependiendo de la implementación, esto da false o excepción controlada.
-        // Dado que el validador @ValidDnaSequence lo para antes, aquí probamos el detector directo.
         String[] dna = {"ATG", "CAGT", "TTA", "AGA"};
         assertFalse(detector.isMutant(dna));
     }
 
     @Test
     void testMutantCrossed() {
-        // Caso complejo: Cruce de horizontal y vertical
         String[] dna = {
                 "ATGCGA",
                 "CAGTGC",
                 "TTATGT",
-                "AGAAGG", // AAAA vertical en col 4? No, probemos algo claro
+                "AGAAGG",
                 "CCCCTA",
                 "TCACTG"
         };
-        // Este ya es mutante por otras razones, pero aseguramos robustez
+        assertTrue(detector.isMutant(dna));
+    }
+
+    @Test
+    void testAllSameCharacters() {
+        String[] dna = {"AAAA", "AAAA", "AAAA", "AAAA"};
+        assertTrue(detector.isMutant(dna));
+    }
+
+    @Test
+    void testSequenceAtEndBoundary() {
+        // CORREGIDO: Matriz diseñada para tener SOLO 1 secuencia horizontal al final
+        // y ninguna vertical accidental.
+        String[] dna = {
+                "ATGC",
+                "CAGT",
+                "TGCA",
+                "AAAA" // Horizontal al final. (Columnas: A,T,G,A -> no verticales)
+        };
+        // 1 secuencia no es suficiente para ser mutante (>1)
+        assertFalse(detector.isMutant(dna));
+    }
+
+    @Test
+    void testLargeMatrixPerformance() {
+        int n = 100;
+        String[] dna = new String[n];
+        // Llenar con 'A's
+        StringBuilder row = new StringBuilder();
+        for(int i=0; i<n; i++) row.append('A');
+
+        for (int i = 0; i < n; i++) {
+            dna[i] = row.toString();
+        }
         assertTrue(detector.isMutant(dna));
     }
 }

@@ -3,6 +3,7 @@ package org.example.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.dto.DnaRequest;
 import org.example.service.MutantService;
+import org.example.service.StatsService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -11,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -21,7 +23,10 @@ class MutantControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private MutantService service;
+    private MutantService mutantService;
+
+    @MockBean
+    private StatsService statsService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -32,7 +37,7 @@ class MutantControllerTest {
         DnaRequest request = new DnaRequest();
         request.setDna(dna);
 
-        when(service.analyze(dna)).thenReturn(true);
+        when(mutantService.analyze(dna)).thenReturn(true);
 
         mockMvc.perform(post("/mutant")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -46,15 +51,13 @@ class MutantControllerTest {
         DnaRequest request = new DnaRequest();
         request.setDna(dna);
 
-        when(service.analyze(dna)).thenReturn(false);
+        when(mutantService.analyze(dna)).thenReturn(false);
 
         mockMvc.perform(post("/mutant")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isForbidden());
     }
-
-    // --- NUEVOS TESTS PARA LLEGAR A 25+ ---
 
     @Test
     void testInvalidDna_Returns400_InvalidCharacters() throws Exception {
@@ -89,5 +92,20 @@ class MutantControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void testEmptyBody_Returns400() throws Exception {
+        mockMvc.perform(post("/mutant")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("")) // Body vacío
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void testWrongMethod_Returns405() throws Exception {
+        // Intentar hacer GET a /mutant que solo acepta POST
+        mockMvc.perform(get("/mutant"))
+                .andExpect(status().isMethodNotAllowed());
     }
 }

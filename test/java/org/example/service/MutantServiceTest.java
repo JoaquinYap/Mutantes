@@ -10,7 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -28,39 +28,70 @@ class MutantServiceTest {
     private MutantService service;
 
     @Test
-    void testAnalyzeNewDna() {
+    void testAnalyzeNewDnaMutant() {
         String[] dna = {"ATGCGA"};
-        // Simulamos que NO existe en base de datos
-        when(repository.findByHash(anyString())).thenReturn(Optional.empty());
-        // Simulamos que el detector dice que ES mutante
+        when(repository.findByDnaHash(anyString())).thenReturn(Optional.empty());
         when(detector.isMutant(dna)).thenReturn(true);
 
         boolean result = service.analyze(dna);
 
         assertTrue(result);
-        // Verificamos que se guardó en la base de datos
         verify(repository, times(1)).save(any(DnaRecord.class));
     }
 
     @Test
-    void testAnalyzeCachedDna() {
+    void testAnalyzeCachedDnaMutant() {
         String[] dna = {"ATGCGA"};
+        DnaRecord existing = DnaRecord.builder().dnaHash("hash").isMutant(true).build();
 
-        // CORRECCIÓN: Usamos el Builder en lugar de 'new DnaRecord(...)'
-        // Esto evita errores si agregas o quitas campos en la entidad
-        DnaRecord existing = DnaRecord.builder()
-                .id(1L)
-                .hash("hash_simulado")
-                .isMutant(true)
-                .build();
-
-        // Simulamos que YA existe en base de datos
-        when(repository.findByHash(anyString())).thenReturn(Optional.of(existing));
+        when(repository.findByDnaHash(anyString())).thenReturn(Optional.of(existing));
 
         boolean result = service.analyze(dna);
 
         assertTrue(result);
-        // Verificamos que NUNCA se llame a save (porque ya estaba en caché)
         verify(repository, never()).save(any(DnaRecord.class));
+        verify(detector, never()).isMutant(any());
+    }
+
+    // --- NUEVOS TESTS ---
+
+    @Test
+    void testAnalyzeNewDnaHuman() {
+        String[] dna = {"AAAA"}; // Supongamos que es humano
+        when(repository.findByDnaHash(anyString())).thenReturn(Optional.empty());
+        when(detector.isMutant(dna)).thenReturn(false);
+
+        boolean result = service.analyze(dna);
+
+        assertFalse(result);
+        // Debe guardar el registro aunque sea humano
+        verify(repository, times(1)).save(any(DnaRecord.class));
+    }
+
+    @Test
+    void testAnalyzeCachedDnaHuman() {
+        String[] dna = {"AAAA"};
+        DnaRecord existing = DnaRecord.builder().dnaHash("hash").isMutant(false).build();
+
+        when(repository.findByDnaHash(anyString())).thenReturn(Optional.of(existing));
+
+        boolean result = service.analyze(dna);
+
+        assertFalse(result);
+        verify(repository, never()).save(any(DnaRecord.class));
+        verify(detector, never()).isMutant(any());
+    }
+
+    @Test
+    void testDnaHashCalculationConsistency() {
+        // Verificar que se llama al repositorio con algún hash
+        String[] dna = {"ATGCGA"};
+        when(repository.findByDnaHash(anyString())).thenReturn(Optional.empty());
+        when(detector.isMutant(dna)).thenReturn(true);
+
+        service.analyze(dna);
+
+        // Verificamos que se llamó a findByDnaHash (lo cual implica que se calculó)
+        verify(repository, times(1)).findByDnaHash(anyString());
     }
 }

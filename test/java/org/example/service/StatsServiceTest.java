@@ -33,7 +33,6 @@ class StatsServiceTest {
 
     @Test
     void testGetStats_ZeroHumans() {
-        // Caso división por cero: Ratio debería ser 0 (o manejarlo según tu lógica)
         when(repository.countByIsMutant(true)).thenReturn(10L);
         when(repository.countByIsMutant(false)).thenReturn(0L);
 
@@ -41,7 +40,7 @@ class StatsServiceTest {
 
         assertEquals(10, response.getCountMutantDna());
         assertEquals(0, response.getCountHumanDna());
-        assertEquals(0.0, response.getRatio()); // Tu lógica actual devuelve 0 si humans == 0
+        assertEquals(0.0, response.getRatio());
     }
 
     @Test
@@ -66,5 +65,32 @@ class StatsServiceTest {
         assertEquals(0, response.getCountMutantDna());
         assertEquals(0, response.getCountHumanDna());
         assertEquals(0.0, response.getRatio());
+    }
+
+    // --- NUEVOS TESTS ---
+
+    @Test
+    void testGetStats_EqualCounts() {
+        // Caso 1:1 ratio
+        when(repository.countByIsMutant(true)).thenReturn(50L);
+        when(repository.countByIsMutant(false)).thenReturn(50L);
+
+        StatsResponse response = service.getStats();
+
+        assertEquals(50, response.getCountMutantDna());
+        assertEquals(50, response.getCountHumanDna());
+        assertEquals(1.0, response.getRatio());
+    }
+
+    @Test
+    void testGetStats_RecurringDecimal() {
+        // Caso 1/3 = 0.333...
+        when(repository.countByIsMutant(true)).thenReturn(1L);
+        when(repository.countByIsMutant(false)).thenReturn(3L);
+
+        StatsResponse response = service.getStats();
+
+        // Verificamos precisión básica
+        assertEquals(0.3333, response.getRatio(), 0.0001);
     }
 }

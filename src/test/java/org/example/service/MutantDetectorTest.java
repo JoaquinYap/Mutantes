@@ -7,8 +7,6 @@ class MutantDetectorTest {
 
     private final MutantDetector detector = new MutantDetector();
 
-    // --- CASOS MUTANTES (5 tests) ---
-
     @Test
     void testMutantHorizontal() {
         String[] dna = {"AAAAAA", "CAGTGC", "TTATGT", "AGAAGG", "CCCCTA", "TCACTG"};
@@ -39,8 +37,6 @@ class MutantDetectorTest {
         assertTrue(detector.isMutant(dna));
     }
 
-    // --- CASOS HUMANOS (2 tests) ---
-
     @Test
     void testHumanSimple() {
         String[] dna = {"ATGCGA", "CAGTGC", "TTATTT", "AGACGG", "GCGTCA", "TCACTG"};
@@ -59,8 +55,6 @@ class MutantDetectorTest {
         };
         assertFalse(detector.isMutant(dnaOne));
     }
-
-    // --- CASOS BORDE Y VALIDACIONES (5 tests) ---
 
     @Test
     void testNullDna() {
@@ -100,7 +94,6 @@ class MutantDetectorTest {
         assertFalse(detector.isMutant(dna));
     }
 
-    // --- NUEVOS TESTS PARA CUMPLIR RÚBRICA (3 tests más para llegar a 15) ---
 
     @Test
     void test5x5MatrixMutant() {
@@ -116,25 +109,68 @@ class MutantDetectorTest {
 
     @Test
     void testRectangularMatrix() {
-        // Caso robustez: Matriz irregular (filas de distinto largo)
-        // Dependiendo de la implementación, esto da false o excepción controlada.
-        // Dado que el validador @ValidDnaSequence lo para antes, aquí probamos el detector directo.
         String[] dna = {"ATG", "CAGT", "TTA", "AGA"};
         assertFalse(detector.isMutant(dna));
     }
 
     @Test
     void testMutantCrossed() {
-        // Caso complejo: Cruce de horizontal y vertical
         String[] dna = {
                 "ATGCGA",
                 "CAGTGC",
                 "TTATGT",
-                "AGAAGG", // AAAA vertical en col 4? No, probemos algo claro
+                "AGAAGG",
                 "CCCCTA",
                 "TCACTG"
         };
-        // Este ya es mutante por otras razones, pero aseguramos robustez
         assertTrue(detector.isMutant(dna));
+    }
+
+    @Test
+    void testAllSameCharacters() {
+        String[] dna = {"AAAA", "AAAA", "AAAA", "AAAA"};
+        assertTrue(detector.isMutant(dna));
+    }
+
+    @Test
+    void testSequenceAtEndBoundary() {
+        String[] dna = {
+                "ATGC",
+                "CAGT",
+                "TGCA",
+                "AAAA"
+        };
+        assertFalse(detector.isMutant(dna));
+    }
+
+    @Test
+    void testLargeMatrixPerformance() {
+        int n = 1000; // Matriz grande 1000x1000
+        String[] dna = new String[n];
+        StringBuilder row = new StringBuilder();
+        for(int i=0; i<n; i++) row.append('A');
+
+        for (int i = 0; i < n; i++) {
+            dna[i] = row.toString();
+        }
+
+        long startTime = System.currentTimeMillis();
+        boolean isMutant = detector.isMutant(dna);
+        long endTime = System.currentTimeMillis();
+
+        assertTrue(isMutant);
+        assertTrue((endTime - startTime) < 500, "El algoritmo es demasiado lento para matrices grandes");
+    }
+
+    @Test
+    void testInvalidCharactersInsideDetector() {
+        String[] dna = {"ATGCGA", "CAGTXC", "TTATGT", "AGAAGG", "CCCCTA", "TCACTG"};
+        assertFalse(detector.isMutant(dna));
+    }
+
+    @Test
+    void testNullRowInsideArray() {
+        String[] dna = {"ATGCGA", null, "TTATGT", "AGAAGG", "CCCCTA", "TCACTG"};
+        assertFalse(detector.isMutant(dna));
     }
 }

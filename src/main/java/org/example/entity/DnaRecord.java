@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "dna_records", indexes = {
-        @Index(name = "idx_dna_hash", columnList = "hash"),
+        @Index(name = "idx_dna_hash", columnList = "dna_hash"),
         @Index(name = "idx_is_mutant", columnList = "isMutant")
 })
 @Getter
@@ -21,8 +21,8 @@ public class DnaRecord implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
-    private String hash;
+    @Column(name = "dna_hash", unique = true, nullable = false)
+    private String dnaHash;
 
     @Lob
     private String sequence;

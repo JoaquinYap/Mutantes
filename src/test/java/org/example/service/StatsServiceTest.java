@@ -20,7 +20,7 @@ class StatsServiceTest {
     private StatsService service;
 
     @Test
-    void testGetStats() {
+    void testGetStats_NormalCase() {
         when(repository.countByIsMutant(true)).thenReturn(40L);
         when(repository.countByIsMutant(false)).thenReturn(100L);
 
@@ -29,5 +29,63 @@ class StatsServiceTest {
         assertEquals(40, response.getCountMutantDna());
         assertEquals(100, response.getCountHumanDna());
         assertEquals(0.4, response.getRatio());
+    }
+
+    @Test
+    void testGetStats_ZeroHumans() {
+        when(repository.countByIsMutant(true)).thenReturn(10L);
+        when(repository.countByIsMutant(false)).thenReturn(0L);
+
+        StatsResponse response = service.getStats();
+
+        assertEquals(10, response.getCountMutantDna());
+        assertEquals(0, response.getCountHumanDna());
+        assertEquals(0.0, response.getRatio());
+    }
+
+    @Test
+    void testGetStats_ZeroMutants() {
+        when(repository.countByIsMutant(true)).thenReturn(0L);
+        when(repository.countByIsMutant(false)).thenReturn(50L);
+
+        StatsResponse response = service.getStats();
+
+        assertEquals(0, response.getCountMutantDna());
+        assertEquals(50, response.getCountHumanDna());
+        assertEquals(0.0, response.getRatio());
+    }
+
+    @Test
+    void testGetStats_EmptyDatabase() {
+        when(repository.countByIsMutant(true)).thenReturn(0L);
+        when(repository.countByIsMutant(false)).thenReturn(0L);
+
+        StatsResponse response = service.getStats();
+
+        assertEquals(0, response.getCountMutantDna());
+        assertEquals(0, response.getCountHumanDna());
+        assertEquals(0.0, response.getRatio());
+    }
+
+    @Test
+    void testGetStats_EqualCounts() {
+        when(repository.countByIsMutant(true)).thenReturn(50L);
+        when(repository.countByIsMutant(false)).thenReturn(50L);
+
+        StatsResponse response = service.getStats();
+
+        assertEquals(50, response.getCountMutantDna());
+        assertEquals(50, response.getCountHumanDna());
+        assertEquals(1.0, response.getRatio());
+    }
+
+    @Test
+    void testGetStats_RecurringDecimal() {
+        when(repository.countByIsMutant(true)).thenReturn(1L);
+        when(repository.countByIsMutant(false)).thenReturn(3L);
+
+        StatsResponse response = service.getStats();
+
+        assertEquals(0.3333, response.getRatio(), 0.0001);
     }
 }

@@ -12,7 +12,7 @@ public class DnaRequest implements Serializable {
 
     @Schema(example = "[\"ATGCGA\",\"CAGTGC\",\"TTATGT\",\"AGAAGG\",\"CCCCTA\",\"TCACTG\"]")
     @NotNull(message = "El ADN no puede ser nulo")
-    @ValidDnaSequence // Validación custom
+    @ValidDnaSequence
     @JsonProperty("dna")
     private String[] dna;
 

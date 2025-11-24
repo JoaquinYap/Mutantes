@@ -18,21 +18,18 @@ public class MutantService {
     private final MutantDetector detector;
 
     public boolean analyze(String[] dna) {
-        // 1. Calcular Hash SHA-256
-        String hash = calculateHash(dna);
+        String dnaHash = calculateHash(dna);
 
-        // 2. Verificar Cache en BD
-        Optional<DnaRecord> existing = repository.findByHash(hash);
+
+        Optional<DnaRecord> existing = repository.findByDnaHash(dnaHash);
         if (existing.isPresent()) {
             return existing.get().isMutant();
         }
 
-        // 3. Analizar ADN
         boolean isMutant = detector.isMutant(dna);
 
-        // 4. Guardar resultado
         DnaRecord record = DnaRecord.builder()
-                .hash(hash)
+                .dnaHash(dnaHash)
                 .sequence(String.join(",", dna))
                 .isMutant(isMutant)
                 .build();

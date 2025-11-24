@@ -100,7 +100,7 @@ class MutantDetectorTest {
         assertFalse(detector.isMutant(dna));
     }
 
-    // --- NUEVOS TESTS PARA CUMPLIR RÚBRICA ---
+    // --- TESTS ADICIONALES DE LA RÚBRICA ---
 
     @Test
     void test5x5MatrixMutant() {
@@ -116,12 +116,14 @@ class MutantDetectorTest {
 
     @Test
     void testRectangularMatrix() {
+        // Caso robustez: Matriz irregular (filas de distinto largo)
         String[] dna = {"ATG", "CAGT", "TTA", "AGA"};
         assertFalse(detector.isMutant(dna));
     }
 
     @Test
     void testMutantCrossed() {
+        // Caso complejo: Cruce de horizontal y vertical
         String[] dna = {
                 "ATGCGA",
                 "CAGTGC",
@@ -141,15 +143,12 @@ class MutantDetectorTest {
 
     @Test
     void testSequenceAtEndBoundary() {
-        // CORREGIDO: Matriz diseñada para tener SOLO 1 secuencia horizontal al final
-        // y ninguna vertical accidental.
         String[] dna = {
                 "ATGC",
                 "CAGT",
                 "TGCA",
-                "AAAA" // Horizontal al final. (Columnas: A,T,G,A -> no verticales)
+                "AAAA"
         };
-        // 1 secuencia no es suficiente para ser mutante (>1)
         assertFalse(detector.isMutant(dna));
     }
 
@@ -157,7 +156,6 @@ class MutantDetectorTest {
     void testLargeMatrixPerformance() {
         int n = 100;
         String[] dna = new String[n];
-        // Llenar con 'A's
         StringBuilder row = new StringBuilder();
         for(int i=0; i<n; i++) row.append('A');
 
@@ -165,5 +163,22 @@ class MutantDetectorTest {
             dna[i] = row.toString();
         }
         assertTrue(detector.isMutant(dna));
+    }
+
+    // --- NUEVOS TESTS AGREGADOS PARA 100% DE RÚBRICA ---
+
+    @Test
+    void testInvalidCharactersInsideDetector() {
+        // Prueba directa al algoritmo: debe retornar false si hay caracteres inválidos
+        // (aunque el controller lo filtre antes, el servicio debe ser robusto)
+        String[] dna = {"ATGCGA", "CAGTXC", "TTATGT", "AGAAGG", "CCCCTA", "TCACTG"};
+        assertFalse(detector.isMutant(dna));
+    }
+
+    @Test
+    void testNullRowInsideArray() {
+        // Prueba de robustez: Array existe, pero una fila es null
+        String[] dna = {"ATGCGA", null, "TTATGT", "AGAAGG", "CCCCTA", "TCACTG"};
+        assertFalse(detector.isMutant(dna));
     }
 }

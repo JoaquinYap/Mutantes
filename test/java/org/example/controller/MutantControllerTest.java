@@ -104,7 +104,6 @@ class MutantControllerTest {
 
     @Test
     void testWrongMethod_Returns405() throws Exception {
-        // Intentar hacer GET a /mutant que solo acepta POST
         mockMvc.perform(get("/mutant"))
                 .andExpect(status().isMethodNotAllowed());
     }

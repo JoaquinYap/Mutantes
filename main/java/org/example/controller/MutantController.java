@@ -16,32 +16,29 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 @RestController
-// Quitamos @RequestMapping("/mutant") de la clase para poder tener /health en la raíz
 @Tag(name = "Mutant Detector", description = "API para detectar mutantes")
 @RequiredArgsConstructor
 public class MutantController {
 
     private final MutantService service;
 
-    // --- ENDPOINT 1: DETECTOR DE MUTANTES ---
     @Operation(summary = "Analizar ADN", description = "Detecta si un humano es mutante basándose en su secuencia de ADN")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Es Mutante"),
             @ApiResponse(responseCode = "403", description = "Es Humano"),
             @ApiResponse(responseCode = "400", description = "ADN Inválido (formato incorrecto)")
     })
-    @PostMapping("/mutant") // Ruta definida aquí
+    @PostMapping("/mutant")
     public ResponseEntity<Void> isMutant(@Valid @RequestBody DnaRequest request) {
         boolean isMutant = service.analyze(request.getDna());
         return isMutant ? ResponseEntity.ok().build() : ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
-    // --- ENDPOINT 2: HEALTH CHECK (NUEVO) ---
     @Operation(summary = "Health Check", description = "Verifica que la API esté viva y funcionando correctamente")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "API operativa")
     })
-    @GetMapping("/health") // Ruta definida aquí
+    @GetMapping("/health")
     public ResponseEntity<Map<String, Object>> healthCheck() {
         return ResponseEntity.ok(Map.of(
                 "status", "UP",

@@ -53,18 +53,15 @@ class MutantServiceTest {
         verify(detector, never()).isMutant(any());
     }
 
-    // --- NUEVOS TESTS ---
-
     @Test
     void testAnalyzeNewDnaHuman() {
-        String[] dna = {"AAAA"}; // Supongamos que es humano
+        String[] dna = {"AAAA"};
         when(repository.findByDnaHash(anyString())).thenReturn(Optional.empty());
         when(detector.isMutant(dna)).thenReturn(false);
 
         boolean result = service.analyze(dna);
 
         assertFalse(result);
-        // Debe guardar el registro aunque sea humano
         verify(repository, times(1)).save(any(DnaRecord.class));
     }
 
@@ -84,14 +81,12 @@ class MutantServiceTest {
 
     @Test
     void testDnaHashCalculationConsistency() {
-        // Verificar que se llama al repositorio con algún hash
         String[] dna = {"ATGCGA"};
         when(repository.findByDnaHash(anyString())).thenReturn(Optional.empty());
         when(detector.isMutant(dna)).thenReturn(true);
 
         service.analyze(dna);
 
-        // Verificamos que se llamó a findByDnaHash (lo cual implica que se calculó)
         verify(repository, times(1)).findByDnaHash(anyString());
     }
 }

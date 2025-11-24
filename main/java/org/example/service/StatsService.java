@@ -1,15 +1,15 @@
 package org.example.service;
 
-import lombok.RequiredArgsConstructor; // Importante
+import lombok.RequiredArgsConstructor;
 import org.example.dto.StatsResponse;
 import org.example.repository.DnaRecordRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor // Inyección de dependencias automática
+@RequiredArgsConstructor
 public class StatsService {
 
-    private final DnaRecordRepository repository; // 'final' es clave aquí
+    private final DnaRecordRepository repository;
 
     public StatsResponse getStats() {
         long mutants = repository.countByIsMutant(true);

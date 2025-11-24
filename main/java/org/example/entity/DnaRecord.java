@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "dna_records", indexes = {
-        @Index(name = "idx_dna_hash", columnList = "dna_hash"), // Cambiar nombre columna índice
+        @Index(name = "idx_dna_hash", columnList = "dna_hash"),
         @Index(name = "idx_is_mutant", columnList = "isMutant")
 })
 @Getter
@@ -21,7 +21,6 @@ public class DnaRecord implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // CAMBIO AQUÍ: de 'hash' a 'dnaHash' y en la columna a 'dna_hash'
     @Column(name = "dna_hash", unique = true, nullable = false)
     private String dnaHash;
 

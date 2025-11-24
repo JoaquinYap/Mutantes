@@ -1,7 +1,7 @@
 package org.example.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import lombok.RequiredArgsConstructor; // Importante
+import lombok.RequiredArgsConstructor;
 import org.example.dto.StatsResponse;
 import org.example.service.StatsService;
 import org.springframework.http.ResponseEntity;
@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/stats")
-@RequiredArgsConstructor // Inyección de dependencias automática
+@RequiredArgsConstructor
 public class StatsController {
 
-    private final StatsService service; // 'final' es clave aquí
+    private final StatsService service;
 
     @Operation(summary = "Obtener estadísticas")
     @GetMapping

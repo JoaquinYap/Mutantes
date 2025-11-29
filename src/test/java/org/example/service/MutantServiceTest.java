@@ -36,7 +36,7 @@ class MutantServiceTest {
         boolean result = service.analyze(dna);
 
         assertTrue(result);
-        verify(repository, times(1)).save(any(DnaRecord.class));
+        verify(repository, timeout(500).times(1)).save(any(DnaRecord.class));
     }
 
     @Test
@@ -62,7 +62,8 @@ class MutantServiceTest {
         boolean result = service.analyze(dna);
 
         assertFalse(result);
-        verify(repository, times(1)).save(any(DnaRecord.class));
+        // CORRECCIÓN: timeout para el guardado asíncrono
+        verify(repository, timeout(500).times(1)).save(any(DnaRecord.class));
     }
 
     @Test

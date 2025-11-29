@@ -1,37 +1,37 @@
 package org.example.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import java.util.Set;
 
+@Slf4j
 @Component
 public class MutantDetector {
 
     private static final int SEQUENCE_LENGTH = 4;
-
     private static final Set<Character> VALID_BASES = Set.of('A', 'T', 'C', 'G');
 
     public boolean isMutant(String[] dna) {
         if (dna == null) return false;
-
         int n = dna.length;
         if (n == 0) return false;
-
         if (n < SEQUENCE_LENGTH) return false;
+
+        log.debug("Iniciando análisis de ADN de tamaño {}x{}", n, n);
 
         char[][] matrix = new char[n][];
 
         for (int i = 0; i < n; i++) {
             if (dna[i] == null || dna[i].length() != n) {
+                log.warn("Fila {} inválida o de longitud incorrecta", i);
                 return false;
             }
-
-
             for (char c : dna[i].toCharArray()) {
                 if (!VALID_BASES.contains(c)) {
+                    log.warn("Caracter inválido encontrado: {}", c);
                     return false;
                 }
             }
-
             matrix[i] = dna[i].toCharArray();
         }
 
@@ -40,17 +40,19 @@ public class MutantDetector {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
 
-
-                if (sequencesFound > 1) return true;
+                if (sequencesFound > 1) {
+                    log.info("Mutante detectado por Early Termination (Secuencias > 1)");
+                    return true;
+                }
 
                 char base = matrix[i][j];
-
 
                 if (j <= n - SEQUENCE_LENGTH) {
                     if (base == matrix[i][j+1] &&
                             base == matrix[i][j+2] &&
                             base == matrix[i][j+3]) {
                         sequencesFound++;
+                        log.debug("Secuencia Horizontal encontrada en [{},{}]", i, j);
                         if (sequencesFound > 1) return true;
                     }
                 }
@@ -60,6 +62,7 @@ public class MutantDetector {
                             base == matrix[i+2][j] &&
                             base == matrix[i+3][j]) {
                         sequencesFound++;
+                        log.debug("Secuencia Vertical encontrada en [{},{}]", i, j);
                         if (sequencesFound > 1) return true;
                     }
                 }
@@ -69,6 +72,7 @@ public class MutantDetector {
                             base == matrix[i+2][j+2] &&
                             base == matrix[i+3][j+3]) {
                         sequencesFound++;
+                        log.debug("Secuencia Diagonal encontrada en [{},{}]", i, j);
                         if (sequencesFound > 1) return true;
                     }
                 }
@@ -78,12 +82,14 @@ public class MutantDetector {
                             base == matrix[i+2][j-2] &&
                             base == matrix[i+3][j-3]) {
                         sequencesFound++;
+                        log.debug("Secuencia Diagonal Inversa encontrada en [{},{}]", i, j);
                         if (sequencesFound > 1) return true;
                     }
                 }
             }
         }
 
+        log.info("Análisis finalizado. Secuencias encontradas: {}", sequencesFound);
         return false;
     }
 }

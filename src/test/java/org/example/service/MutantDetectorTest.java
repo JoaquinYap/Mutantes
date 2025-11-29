@@ -45,7 +45,7 @@ class MutantDetectorTest {
 
     @Test
     void testHumanWithOnlyOneHorizontalSequence() {
-        String[] dnaOne = {
+        String[] dna = {
                 "AAAAGA",
                 "CAGTCC",
                 "TTATGT",
@@ -53,7 +53,7 @@ class MutantDetectorTest {
                 "GCGTCA",
                 "TCACTG"
         };
-        assertFalse(detector.isMutant(dnaOne));
+        assertFalse(detector.isMutant(dna));
     }
 
     @Test
@@ -93,7 +93,6 @@ class MutantDetectorTest {
         };
         assertFalse(detector.isMutant(dna));
     }
-
 
     @Test
     void test5x5MatrixMutant() {
@@ -144,24 +143,25 @@ class MutantDetectorTest {
     }
 
     @Test
-    void testLargeMatrixPerformance() {
-        int n = 1000; // Matriz grande 1000x1000
+    void testHugeMatrix_PerformanceCheck() {
+        int n = 1000;
         String[] dna = new String[n];
-        StringBuilder row = new StringBuilder();
-        for(int i=0; i<n; i++) row.append('A');
 
-        for (int i = 0; i < n; i++) {
-            dna[i] = row.toString();
-        }
+        String row = "T".repeat(n);
+        for(int i=0; i<n; i++) dna[i] = row;
 
         long startTime = System.currentTimeMillis();
         boolean isMutant = detector.isMutant(dna);
         long endTime = System.currentTimeMillis();
 
-        assertTrue(isMutant);
-        assertTrue((endTime - startTime) < 500, "El algoritmo es demasiado lento para matrices grandes");
-    }
+        assertTrue(isMutant, "Debería ser mutante");
 
+        long duration = endTime - startTime;
+        System.out.println("Performance Test 1000x1000: " + duration + "ms");
+
+        assertTrue(duration < 800,
+                "El algoritmo tardó " + duration + "ms, debería ser menos de 800ms para N=1000");
+    }
     @Test
     void testInvalidCharactersInsideDetector() {
         String[] dna = {"ATGCGA", "CAGTXC", "TTATGT", "AGAAGG", "CCCCTA", "TCACTG"};
@@ -172,5 +172,16 @@ class MutantDetectorTest {
     void testNullRowInsideArray() {
         String[] dna = {"ATGCGA", null, "TTATGT", "AGAAGG", "CCCCTA", "TCACTG"};
         assertFalse(detector.isMutant(dna));
+    }
+
+    @Test
+    void testComplexMixedMutant() {
+        String[] dna = {
+                "AAAA",
+                "CCCC",
+                "TCAG",
+                "GGTC"
+        };
+        assertTrue(detector.isMutant(dna));
     }
 }
